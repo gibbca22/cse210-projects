@@ -1,60 +1,95 @@
+
 using System;
-
-
-public class Menu
+// For exceeding requirements, I asked the user if they would like to save their goals before quitting. 
+// I also made sure that no additional points were rewarded if completed goals were attempted to be recorded again. 
+class Program
 {
     static void Main(string[] args)
     {
-        Menu menu = new Menu();
-        menu.DisplayMainMenu();
-        
-    }
-        
-    private List<string> _mainMenu;
-    private List<string> _createGoalMenu;
+        AllGoals allGoals = new AllGoals();
+        int userMainMenuSelection = 0;
 
-    public Menu()
-    {
-        _mainMenu = new List<string>
-        {
-            "Menu Options:",
-            "  1. Create New Goal",
-            "  2. List Goals",
-            "  3. Save Goals",
-            "  4. Load Goals",
-            "  5. Record Event",
-            "  6. Quit"
-        };
+        Console.Clear();
+        Console.WriteLine("Welcome to the Goal Tracking App!");
+        Console.WriteLine();
 
-        _createGoalMenu = new List<string>
+        while (userMainMenuSelection != 6)
         {
-            "The types of Goals are:",
-            "  1. Simple Goal",
-            "  2. Eternal Goal",
-            "  3. CheckList Goal"
-        };
-    }
+            Menu menu = new Menu();
+            allGoals.DisplayPoints(allGoals.getTotalPoints());
+            Console.WriteLine();
+            menu.DisplayMainMenu();
+            userMainMenuSelection = int.Parse(Console.ReadLine());
+            Console.Clear();
 
-    public void DisplayMainMenu()
-    {
-        foreach (string menuItem in _mainMenu)
-        {
-            Console.WriteLine(menuItem);
+            switch (userMainMenuSelection)
+            {
+                case 1:
+                    menu.DisplayNewGoalMenu();
+                    int userNewGoalSelection = int.Parse(Console.ReadLine());
+                    Console.Clear();
+                    Goal goal = null;
+                    if (userNewGoalSelection == 1)
+                    {
+                        goal = new SimpleGoal();
+                        goal.DisplayGoalName();
+                        goal.DisplayGoalDescription();
+                        goal.DisplayGoalPoints();
+                    }
+                    else if (userNewGoalSelection == 2)
+                    {
+                        goal = new EternalGoal();
+                        goal.DisplayGoalName();
+                        goal.DisplayGoalDescription();
+                        goal.DisplayGoalPoints();
+                    }
+                    else
+                    {
+                        goal = new CheckListGoal();
+                        goal.DisplayGoalName();
+                        goal.DisplayGoalDescription();
+                        goal.DisplayGoalPoints();
+                    }
+
+                    if (goal != null)
+                    {
+                        allGoals.addGoal(goal);
+                    }
+                    break;
+
+                case 2:
+                    allGoals.DisplayGoals();
+                    break;
+
+                case 3:
+                    allGoals.SaveGoals();
+                    break;
+
+                case 4:
+                    allGoals.LoadGoals();
+                    break;
+
+                case 5:
+                    allGoals.DisplayGoalRecordEvent();
+                    break;
+
+                case 6:
+                    Console.Write("Do you want to save before you quit (y/n)? ");
+                    string userInput = Console.ReadLine();
+                    if (userInput == "y")
+                    {
+                        allGoals.SaveGoals();
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Thank you! Goodbye. ");
+                    break;
+
+                default:
+                    Console.WriteLine("Please select a valid option.");
+                    break;
+
+            }
         }
-
-        Console.Write("Select a choice: ");
-       
     }
-
-    public void DisplayNewGoalMenu()
-    {
-        foreach (string menuItem in _createGoalMenu)
-        {
-            Console.WriteLine(menuItem);
-        }
-        Console.Write("Select a choice from the menu: ");
-    }
-
-    }
-
-    
+}
